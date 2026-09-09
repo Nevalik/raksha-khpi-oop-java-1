@@ -102,6 +102,12 @@ java -cp out ua.khpi.oop1.lab01.HelloJava
 javap -classpath out -c ua.khpi.oop1.lab01.HelloJava
 ```
 
+**Результат запуску javac -d out src\ua\khpi\oop1\lab01\HelloJava.java:**
+```
+Якщо команда виконана без помилок то компiлятор не виводить повiдомлення при успiху
+```
+
+
 **Результат запуску HelloJava:**
 ```
 Hello, Java!
@@ -158,12 +164,44 @@ git log --oneline --decorate --graph --all
 git push -u origin lab01
 ```
 
+**Активна гілка:**
+*lab01
+main
+
+**Статус (чисте робоче дерево):**
+```
+On branch lab01
+Your branch is up to date with 'origin/lab01'.
+nothing to commit, working tree clean
+```
+
+**Історія комітів:**
+```
+eddd6d9 (HEAD -> lab01, origin/lab01, origin/HEAD) Add initial README content for lab work
+1fd7f2d Add laboratory report for Java programming
+0e0e709 Remove misplaced doc.md from package directory
+2aa1280 Added md documentation
+a897f5c Add environment report and CLI instructions
+a162434 (origin/main, main) Initial empty commit
+```
+
+**Перевірка ігнорування:**
+```powershell
+git check-ignore -v out/ua/khpi/oop1/lab01/HelloJava.class
+```
+Результат: `.gitignore:1:out/    out/ua/khpi/oop1/lab01/HelloJava.class`
+
+**Публікація гілки:** гілка `lab01` опублікована на GitHub, синхронізована з `origin/lab01`.
+
+
+
+
 Перевірка ігнорування:
 ```powershell
 git check-ignore -v out/ua/khpi/oop1/lab01/HelloJava.class
 ```
 
-*500fac8 (HEAD -> lab01) Add environment report and CLI instructions*
+
 
 ---
 
@@ -173,22 +211,34 @@ git check-ignore -v out/ua/khpi/oop1/lab01/HelloJava.class
 |---|---|---|
 | Вибір JDK | JDK 21.0.12 (через PATH) | Project SDK: JDK 21.0.12 |
 | Джерела | Явний шлях після `javac` | Sources Root — `src/` |
-| Результати | `out/` (параметр `-d out`) | Каталог складання IDE |
-| Classpath | `-cp out` | Формується конфігурацією запуску |
+| Результати | `out/` (параметр `-d out`) | `out\production\raksha-khpi-oop-java-1\` (власний каталог складання IDE) |
+| Classpath | `-cp out` | Формується автоматично конфігурацією запуску |
+| Main class | Повне ім'я після `java` | `ua.khpi.oop1.lab01.HelloJava` (поле Main class) |
 | Робочий каталог | Каталог поточного shell | Поле Working directory |
 
-**Висновок:** значення Java version та working directory збігаються в CLI та IntelliJ IDEA, оскільки Project SDK в IDE налаштовано на той самий JDK 21, що й у PATH терміналу.
+**Фактичний вивід запуску HelloJava через IntelliJ IDEA:**
+```
+Hello, Java!
+Process finished with exit code 0
+```
 
----
+Результат виконання (`Hello, Java!`) повністю збігається з CLI. Версія JDK також однакова (21.0.12). Каталог складання відрізняється: CLI використовує `out/`, тоді як IDE автоматично створює власний каталог `out\production\<назва проєкту>\` 
+
+**Виявлена відмінність:** постачальник JDK відрізняється — CLI використовує 
+Microsoft Build of OpenJDK (через PATH), тоді як IntelliJ IDEA використовує 
+Oracle JDK (Project SDK налаштовано на інший встановлений дистрибутив). 
+
+
 
 ## 11. Протокол налагодження (Debug)
 
 | Крок | Дія | Результат |
 |---|---|---|
-| 1 | Встановлено breakpoint на першому рядку `System.out.println` | Точка зупину активна |
-| 2 | Запущено `EnvironmentReport.main` командою Debug | Програма зупинилась на breakpoint |
-| 3 | Переглянуто вікно Variables | Видно значення `javaVersion`, `javaVendor`, `operatingSystem`, `currentUser`, `workingDirectory` |
-| 4 | Виконано Resume Program | Процес завершився з кодом 0 |
+| 1 | Встановлено breakpoint на першому рядку `System.out.println` (рядок з `javaVersion`) | Точка зупину активна |
+| 2 | Запущено `EnvironmentReport.main` командою Debug | Програма зупинилась на breakpoint, `args = []` |
+| 3 | Виконано три кроки Step Over | Змінні `javaVersion`, `javaVendor`, `operatingSystem` отримали значення: `"21.0.12"`, `"Oracle Corporation"`, `"Windows 11"` |
+| 4 | Переглянуто вікно Threads & Variables | Значення змінних видимі та коректні |
+| 5 | Виконано Resume Program | Процес завершився з кодом 0 |
 
 ---
 
