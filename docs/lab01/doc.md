@@ -51,7 +51,7 @@ raksha-khpi-oop-java-1/
         └── EnvironmentReport.java
 ```
 
-Пакет `ua.khpi.oop1.lab01` відповідає шляху `src/ua/khpi/oop1/lab01/` — кожен компонент відображається окремим вкладеним каталогом.
+Пакет `ua.khpi.oop1.lab01` відповідає шляху `../../src/main/java/ua` — кожен компонент відображається окремим вкладеним каталогом.
 
 ---
 
@@ -98,8 +98,8 @@ public class EnvironmentReport {
 ```powershell
 New-Item -ItemType Directory -Force out
 javac -d out src\ua\khpi\oop1\lab01\HelloJava.java
-java -cp out ua.khpi.oop1.lab01.HelloJava
-javap -classpath out -c ua.khpi.oop1.lab01.HelloJava
+java -cp out main.ua.khpi.oop1.lab01.HelloJava
+javap -classpath out -c main.ua.khpi.oop1.lab01.HelloJava
 ```
 
 **Результат запуску HelloJava:**
@@ -131,7 +131,7 @@ Hello, Java!
 Команди:
 ```powershell
 javac -d out src\ua\khpi\oop1\lab01\EnvironmentReport.java
-java -cp out ua.khpi.oop1.lab01.EnvironmentReport
+java -cp out main.ua.khpi.oop1.lab01.EnvironmentReport
 ```
 
 **Фактичний результат:**
@@ -172,8 +172,8 @@ git check-ignore -v out/ua/khpi/oop1/lab01/HelloJava.class
 | Крок | У терміналі | В IntelliJ IDEA |
 |---|---|---|
 | Вибір JDK | JDK 21.0.12 (через PATH) | Project SDK: JDK 21.0.12 |
-| Джерела | Явний шлях після `javac` | Sources Root — `src/` |
-| Результати | `out/` (параметр `-d out`) | Каталог складання IDE |
+| Джерела | Явний шлях після `javac` | Sources Root — `../../src` |
+| Результати | `../../out` (параметр `-d out`) | Каталог складання IDE |
 | Classpath | `-cp out` | Формується конфігурацією запуску |
 | Робочий каталог | Каталог поточного shell | Поле Working directory |
 
