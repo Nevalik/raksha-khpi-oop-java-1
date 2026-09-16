@@ -51,7 +51,7 @@ raksha-khpi-oop-java-1/
         └── EnvironmentReport.java
 ```
 
-Пакет `ua.khpi.oop1.lab01` відповідає шляху `src/ua/khpi/oop1/lab01/` — кожен компонент відображається окремим вкладеним каталогом.
+Пакет `ua.khpi.oop1.lab01` відповідає шляху `../../raksha-khpi-oop-java-1/src/ua/khpi/oop1/lab01` — кожен компонент відображається окремим вкладеним каталогом.
 
 ---
 
@@ -210,8 +210,8 @@ git check-ignore -v out/ua/khpi/oop1/lab01/HelloJava.class
 | Крок | У терміналі | В IntelliJ IDEA |
 |---|---|---|
 | Вибір JDK | JDK 21.0.12 (через PATH) | Project SDK: JDK 21.0.12 |
-| Джерела | Явний шлях після `javac` | Sources Root — `src/` |
-| Результати | `out/` (параметр `-d out`) | `out\production\raksha-khpi-oop-java-1\` (власний каталог складання IDE) |
+| Джерела | Явний шлях після `javac` | Sources Root — `../../src` |
+| Результати | `../../out` (параметр `-d out`) | `out\production\raksha-khpi-oop-java-1\` (власний каталог складання IDE) |
 | Classpath | `-cp out` | Формується автоматично конфігурацією запуску |
 | Main class | Повне ім'я після `java` | `ua.khpi.oop1.lab01.HelloJava` (поле Main class) |
 | Робочий каталог | Каталог поточного shell | Поле Working directory |
@@ -222,7 +222,7 @@ Hello, Java!
 Process finished with exit code 0
 ```
 
-Результат виконання (`Hello, Java!`) повністю збігається з CLI. Версія JDK також однакова (21.0.12). Каталог складання відрізняється: CLI використовує `out/`, тоді як IDE автоматично створює власний каталог `out\production\<назва проєкту>\` 
+Результат виконання (`Hello, Java!`) повністю збігається з CLI. Версія JDK також однакова (21.0.12). Каталог складання відрізняється: CLI використовує `../../out`, тоді як IDE автоматично створює власний каталог `out\production\<назва проєкту>\` 
 
 **Виявлена відмінність:** постачальник JDK відрізняється — CLI використовує 
 Microsoft Build of OpenJDK (через PATH), тоді як IntelliJ IDEA використовує 
