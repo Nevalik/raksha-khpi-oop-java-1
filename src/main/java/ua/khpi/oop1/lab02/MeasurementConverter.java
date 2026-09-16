@@ -53,7 +53,6 @@ public class MeasurementConverter {
     private static void runManualChecks() {
         double wrongRatio = 1 / 4;
         double correctRatio = 1.0 / 4;
-        System.out.println("Перевірка 1: цілочисельне ділення:");
         System.out.println(wrongRatio);   // 0.0
         System.out.println(correctRatio); // 0.25
 
