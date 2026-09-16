@@ -39,19 +39,8 @@
 ---
 
 ## 4. Дерево каталогів
+![Дерево каталогів](assets/img_2.png)
 
-```
-raksha-khpi-oop-java-1/
-├── .gitignore
-├── README.md
-├── evidence/
-└── src/
-    └── ua/khpi/oop1/lab01/
-        ├── HelloJava.java
-        └── EnvironmentReport.java
-```
-
-Пакет `ua.khpi.oop1.lab01` відповідає шляху `../../src/main/java/ua` — кожен компонент відображається окремим вкладеним каталогом.
 
 ---
 
@@ -103,9 +92,7 @@ javap -classpath out -c main.ua.khpi.oop1.lab01.HelloJava
 ```
 
 **Результат запуску HelloJava:**
-```
-Hello, Java!
-```
+![Результат запуску HelloJava](assets/img_1.png)
 
 **Помічені елементи байткоду (javap -c):**
 1. `getstatic` — отримання статичного поля `System.out` (об'єкт `PrintStream`)
@@ -135,6 +122,9 @@ java -cp out main.ua.khpi.oop1.lab01.EnvironmentReport
 ```
 
 **Фактичний результат:**
+
+![Фактичний результат](assets/img.png)
+
 ```
 Java version: 21.0.12
 Java vendor: Microsoft
@@ -190,6 +180,8 @@ git check-ignore -v out/ua/khpi/oop1/lab01/HelloJava.class
 | 3 | Переглянуто вікно Variables | Видно значення `javaVersion`, `javaVendor`, `operatingSystem`, `currentUser`, `workingDirectory` |
 | 4 | Виконано Resume Program | Процес завершився з кодом 0 |
 
+
+![Debug](assets/img_3.png)
 ---
 
 ## 12. Таблиця протоколу перевірки
