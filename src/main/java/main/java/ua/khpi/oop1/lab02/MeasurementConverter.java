@@ -1,4 +1,4 @@
-package ua.khpi.oop1.lab02;
+package main.java.ua.khpi.oop1.lab02;
 
 /**
  * Варіант 1

@@ -213,7 +213,7 @@ git check-ignore -v out/ua/khpi/oop1/lab01/HelloJava.class
 | Джерела | Явний шлях після `javac` | Sources Root — `../../src` |
 | Результати | `../../out` (параметр `-d out`) | `out\production\raksha-khpi-oop-java-1\` (власний каталог складання IDE) |
 | Classpath | `-cp out` | Формується автоматично конфігурацією запуску |
-| Main class | Повне ім'я після `java` | `ua.khpi.oop1.lab01.HelloJava` (поле Main class) |
+| Main class | Повне ім'я після `java` | `main.java.ua.khpi.oop1.lab01.HelloJava` (поле Main class) |
 | Робочий каталог | Каталог поточного shell | Поле Working directory |
 
 **Фактичний вивід запуску HelloJava через IntelliJ IDEA:**

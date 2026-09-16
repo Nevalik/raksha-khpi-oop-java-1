@@ -1,4 +1,4 @@
-package ua.khpi.oop1.lab01;
+package main.java.ua.khpi.oop1.lab01;
 
 public class EnvironmentReport {
     public static void main(String[] args) {
