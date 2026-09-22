@@ -5,7 +5,7 @@
 - **Варіант:** 1 (Температурний канал)
 - **Репозиторій:**(https://github.com/Nevalik/raksha-khpi-oop-java-1)
 - **Гілка:** `lab02`
-- **Pull Request:** 
+- **Pull Request:** https://github.com/Nevalik/raksha-khpi-oop-java-1/pull/2
 
 ## Налаштування середовища
 
