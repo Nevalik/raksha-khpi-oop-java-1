@@ -3,17 +3,17 @@ package ua.khpi.oop1.lab05;
 import java.util.Scanner;
 
 public class Main {
-
+    // Варіант 1: стан обробки
     static int negativeCount;
     static long positiveSum;
     static int currentNegativeRun;
     static int longestNegativeRun;
 
-
+    // Завдання A: результат обчислення
     static int sqrtRoot;
     static int sqrtRemainder;
 
-
+    /** Обробляє одне значення послідовності*/
     static void accept(int value) {
         if (value < 0) {
             negativeCount++;
@@ -22,14 +22,17 @@ public class Main {
                 longestNegativeRun = currentNegativeRun;
             }
         } else {
-            currentNegativeRun = 0;
+            currentNegativeRun = 0;      // нуль і додатні значення обривають серію
             if (value > 0) {
                 positiveSum += value;
             }
         }
     }
 
-
+    /**
+     * Обчислює sqrt(n) і залишок відніманням непарних чисел 1, 3, 5 ...
+     * Інваріант: remainder == n - root * root, odd == 2 * root + 1
+     */
     static void computeIntegerSqrt(int n) {
         int remainder = n;
         int odd = 1;
@@ -43,7 +46,7 @@ public class Main {
         sqrtRemainder = remainder;
     }
 
-
+    /** Введення й виведення варіанта 1. Повертає false, якщо дані некоректні */
     static boolean processVariant1(Scanner in) {
         if (!in.hasNextInt()) {
             System.out.println("Помилка: некоректне введення");
@@ -72,7 +75,7 @@ public class Main {
         return true;
     }
 
-
+    /** Введення й виведення завдання A */
     static void processTaskA(Scanner in) {
         if (!in.hasNextInt()) {
             System.out.println("Помилка: некоректне введення");
