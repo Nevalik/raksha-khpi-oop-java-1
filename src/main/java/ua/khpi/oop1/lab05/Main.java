@@ -10,6 +10,10 @@ public class Main {
     static int longestNegativeRun;
 
 
+    static int sqrtRoot;
+    static int sqrtRemainder;
+
+
     static void accept(int value) {
         if (value < 0) {
             negativeCount++;
@@ -25,6 +29,19 @@ public class Main {
         }
     }
 
+
+    static void computeIntegerSqrt(int n) {
+        int remainder = n;
+        int odd = 1;
+        int root = 0;
+        while (odd <= remainder) {
+            remainder -= odd;
+            odd += 2;
+            root++;
+        }
+        sqrtRoot = root;
+        sqrtRemainder = remainder;
+    }
 
 
     static boolean processVariant1(Scanner in) {
@@ -55,7 +72,25 @@ public class Main {
         return true;
     }
 
+
+    static void processTaskA(Scanner in) {
+        if (!in.hasNextInt()) {
+            System.out.println("Помилка: некоректне введення");
+            return;
+        }
+        int n = in.nextInt();
+        if (n < 0 || n > 10000) {
+            System.out.println("Помилка: n поза діапазоном 0..10000");
+            return;
+        }
+        computeIntegerSqrt(n);
+        System.out.println("root=" + sqrtRoot + ", remainder=" + sqrtRemainder);
+    }
+
     public static void main(String[] args) {
-        processVariant1(new java.util.Scanner(System.in));
+        Scanner scanner = new Scanner(System.in);
+        if (processVariant1(scanner)) {
+            processTaskA(scanner);
+        }
     }
 }
