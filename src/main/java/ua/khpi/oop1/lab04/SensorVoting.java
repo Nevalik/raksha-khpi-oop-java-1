@@ -39,6 +39,11 @@ public class SensorVoting {
     }
 
     public static void main(String[] args) {
+        vote(Double.NaN, Double.NaN, Double.NaN);
+        vote(20, Double.NaN, 24);
+        vote(20, 24, Double.NaN);
+        vote(150.1, 20, 30);
+        vote(Double.POSITIVE_INFINITY, 20, 30);
         vote(20, 23, 21);              // усі валідні, будь-який порядок 21, voted
         vote(23, 20, 21);
         vote(21, 20, 23);
@@ -47,6 +52,7 @@ public class SensorVoting {
         vote(200, Double.NaN, 20);        // дві відмови - failed
         vote(-50.0, -50.0, -50.0);        // нижня межа включена - voted
         vote(150.0, 150.0, 150.0);        // верхня межа включена - voted
-        vote(-50.1, 20, 30);               // ліворуч від межі - одна відмова, degraded
+        vote(-50.1, 20, 30);
+        vote(34, 17, 0.0/0.0);// ліворуч від межі - одна відмова, degraded
     }
 }

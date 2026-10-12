@@ -32,7 +32,7 @@ public class DecisionController {
     public static void main(String[] args) {
         // Вхідні дані:
         double t1 = 88.8;
-        double t2 =58.3;
+        double t2 = 58.3;
 
         String state1 = classifyChannel(t1);
         String state2 = classifyChannel(t2);
