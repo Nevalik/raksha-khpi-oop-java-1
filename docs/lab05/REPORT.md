@@ -5,7 +5,7 @@
 **Виконав:** Ракша Вадим КН-925а
 **Варіант:** 1 , завдання A 
 **Гілка:** `lab05`
-**Pull Request:** 
+**Pull Request:** https://github.com/Nevalik/raksha-khpi-oop-java-1/pull/5
 
 ---
 
