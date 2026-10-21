@@ -79,6 +79,6 @@ public class PeriodSync {
         // Граничний випадок: переповнення НСК
         printCheck(MAX_LONG, MAX_LONG - 1);
         // Трасування алгоритму
-        printGcdTrace(20, 30);
+        printGcdTrace(5, 12);
     }
 }
