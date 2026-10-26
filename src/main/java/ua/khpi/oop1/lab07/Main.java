@@ -7,6 +7,9 @@ public class Main {
 
     // Мінімальне значення непорожнього масиву
     static int findMinimum(int[] values) {
+        if (values.length == 0) {
+            throw new IllegalArgumentException("Масив пустий");
+        }
         int minimum = values[0];
         for (int index = 1; index < values.length; index++) {
             if (values[index] < minimum) {
@@ -18,6 +21,9 @@ public class Main {
 
     // Індекс першого мінімуму
     static int indexOfMinimum(int[] values) {
+        if (values.length == 0) {
+            return -1;
+        }
         int minimum = findMinimum(values);
         for (int index = 0; index < values.length; index++) {
             if (values[index] == minimum) {
@@ -29,6 +35,9 @@ public class Main {
 
     // Кількість входжень мінімуму
     static int countOfMinimum(int[] values) {
+        if (values.length == 0) {
+            return 0;
+        }
         int minimum = findMinimum(values);
         int count = 0;
         for (int index = 0; index < values.length; index++) {
@@ -97,7 +106,8 @@ public class Main {
     }
 
     public static void main(String[] args) {
-
+        StableCompaction.runTaskA();
+        System.out.println();
 
         // Тести з умови
         process(new int[]{4, 1, 3, 1});
@@ -131,7 +141,6 @@ public class Main {
         lineScanner.close();
 
 
-        StableCompaction.runAdvancedLevel();
-        System.out.println();
+
     }
 }
