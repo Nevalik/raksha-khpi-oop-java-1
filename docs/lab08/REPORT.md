@@ -4,7 +4,7 @@
 - **Дисципліна:** Об'єктно-орієнтоване програмування (Java). Частина 1
 - **Студент:** Ракша Вадим КН-925
 - **Номер у списку :** 17 **Варіант 1**; поглиблений рівень - **A** (непарний варіант)
-- **Pull Request:** [URL Pull Request із lab08](https://github.com/Nevalik/raksha-khpi-oop-java-1/pull/8)
+- **Pull Request:** [URL Pull Request із lab08](https://github.com/Nevalik/raksha-khpi-oop-java-1/pull/9)
 
 ## Налаштування середовища
 
