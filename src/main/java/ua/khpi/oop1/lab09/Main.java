@@ -6,20 +6,22 @@ package ua.khpi.oop1.lab09;
  */
 public class Main {
 
-    static final int STATE_START = 0;
-    static final int STATE_PLAIN = 1;
-    static final int STATE_QUOTED = 2;
-    static final int STATE_AFTER_QUOTE = 3;
+    // Стани автомата для розбору командного рядка (завдання A)
+    static final int STATE_START = 0;        // початок поля (очікуємо символ або ';')
+    static final int STATE_PLAIN = 1;        // звичайне поле
+    static final int STATE_QUOTED = 2;       // всередині подвійних лапок
+    static final int STATE_AFTER_QUOTE = 3;  // після закривної лапки (очікуємо ';' або кінець)
 
-    static final int ERROR_UNCLOSED_QUOTE = -1;
-    static final int ERROR_QUOTE_IN_PLAIN_FIELD = -2;
-    static final int ERROR_TEXT_AFTER_QUOTE = -3;
+    // Коди помилок, які повертає parseCommand
+    static final int ERROR_UNCLOSED_QUOTE = -1;      // лапки відкриті, але не закриті до кінця рядка
+    static final int ERROR_QUOTE_IN_PLAIN_FIELD = -2; // лапка всередині звичайного поля
+    static final int ERROR_TEXT_AFTER_QUOTE = -3;     // текст після закривної лапки до ';'
 
-    // Лічильники для протоколу
+    // Лічильники для протоколу тестів
     static int total = 0;
     static int passed = 0;
 
-    //Обчислення
+    // Обчислення
 
     /**
      * Замінює кожну послідовність пробільних символів одним пробілом і прибирає пробіли по краях.
@@ -52,29 +54,44 @@ public class Main {
         return source.length() - normalized.length();
     }
 
+    /**
+     * Завдання A: розбір командного рядка на поля.
+     *   - поля розділяються символом ';';
+     *   - порожні поля дозволені , "a;;c" -> три поля: "a", "", "c");
+     *   - поле може бути взяте в подвійні лапки: "a;b";c -> поля "a;b" і "c";
+     *   - всередині лапок подвоєна лапка "" означає одну лапку: "a""b" -> a"b;
+     *   - лапка всередині звичайного поля - помилка ERROR_QUOTE_IN_PLAIN_FIELD;
+     *   - будь-який текст після закривної лапки до ';' - помилка ERROR_TEXT_AFTER_QUOTE;
+     *   - якщо лапки не закрито до кінця рядка - помилка ERROR_UNCLOSED_QUOTE.
+
+     */
     static int parseCommand(String line, String[] fields) {
-        StringBuilder field = new StringBuilder();
-        int count = 0;
-        int state = STATE_START;
+        StringBuilder field = new StringBuilder(); // накопичувач поточного поля
+        int count = 0;                             // скільки полів уже збережено
+        int state = STATE_START;                   // поточний стан автомата
 
         for (int index = 0; index < line.length(); index++) {
             char symbol = line.charAt(index);
 
             if (state == STATE_START) {
+                // На початку поля: ';' дає порожнє поле, '"' відкриває цитату,
+                // будь-який інший символ починає звичайне поле.
                 if (symbol == ';') {
                     fields[count] = "";
                     count++;
                 } else if (symbol == '"') {
-                    state = STATE_QUOTED;
+                    state = STATE_QUOTED;          // переходимо всередину лапок
                 } else {
                     field.append(symbol);
                     state = STATE_PLAIN;
                 }
             } else if (state == STATE_PLAIN) {
+                // У звичайному полі: ';' завершує поле, '"' - заборонена,
+                // інші символи просто додаються.
                 if (symbol == ';') {
                     fields[count] = field.toString();
                     count++;
-                    field.setLength(0);
+                    field.setLength(0);           // очищаємо накопичувач для наступного поля
                     state = STATE_START;
                 } else if (symbol == '"') {
                     return ERROR_QUOTE_IN_PLAIN_FIELD;
@@ -82,42 +99,54 @@ public class Main {
                     field.append(symbol);
                 }
             } else if (state == STATE_QUOTED) {
+                // Всередині лапок: "" - це одна літеральна лапка (екранування),
+                // одинарна " закриває цитату, решта символів (включно з ';') - частина поля.
                 if (symbol == '"') {
                     boolean doubledQuote = index + 1 < line.length()
                             && line.charAt(index + 1) == '"';
                     if (doubledQuote) {
-                        field.append('"');
-                        index++;
+                        field.append('"');         // екранована лапка
+                        index++;                   // пропускаємо другу лапку пари
                     } else {
-                        state = STATE_AFTER_QUOTE;
+                        state = STATE_AFTER_QUOTE; // цитату закрито
                     }
                 } else {
                     field.append(symbol);
                 }
-            } else {
+            } else { // STATE_AFTER_QUOTE
+                // Після закривної лапки допустимий лише ';' або кінець рядка.
                 if (symbol == ';') {
                     fields[count] = field.toString();
                     count++;
                     field.setLength(0);
                     state = STATE_START;
                 } else {
-                    return ERROR_TEXT_AFTER_QUOTE;
+                    return ERROR_TEXT_AFTER_QUOTE; // текст після лапки - помилка
                 }
             }
         }
 
+        // Якщо рядок закінчився всередині лапок - цитата не закрита
         if (state == STATE_QUOTED) {
             return ERROR_UNCLOSED_QUOTE;
         }
+
+        // Зберігаємо останнє поле
+        // Це коректно і для STATE_START (порожнє поле), і для STATE_PLAIN, і для STATE_AFTER_QUOTE
         fields[count] = field.toString();
         count++;
         return count;
     }
 
+    /**
+     * Допоміжний метод для тестів: перетворює рядок у текстове подання полів
+     * виду "[][]..." або повертає назву помилки
+     */
     static String parseToText(String line) {
-        String[] fields = new String[line.length() + 1];
+        String[] fields = new String[line.length() + 1]; // максимум полів = довжина + 1
         int count = parseCommand(line, fields);
 
+        // Перетворюємо коди помилок у рядки
         if (count == ERROR_UNCLOSED_QUOTE) {
             return "ERROR_UNCLOSED_QUOTE";
         }
@@ -128,6 +157,7 @@ public class Main {
             return "ERROR_TEXT_AFTER_QUOTE";
         }
 
+        // Формуємо результат у вигляді [a][b][c]
         StringBuilder text = new StringBuilder();
         for (int index = 0; index < count; index++) {
             text.append('[').append(fields[index]).append(']');
@@ -135,7 +165,7 @@ public class Main {
         return text.toString();
     }
 
-    // Консольне подання
+    //Консольне подання
 
     static void check(String input, String expected, String actual) {
         total++;
@@ -184,24 +214,23 @@ public class Main {
 
         System.out.println();
         System.out.println("Завдання A: parseCommand");
-        checkCommand("a;b;c", "[a][b][c]");
-        checkCommand("a;;c", "[a][][c]");
-        checkCommand("\"a;b\";c", "[a;b][c]");
-        checkCommand("\"a\"\"b\";c", "[a\"b][c]");
-        checkCommand("\"abc;d", "ERROR_UNCLOSED_QUOTE");
-        checkCommand("\"\"\"", "ERROR_UNCLOSED_QUOTE");
-        checkCommand("", "[]");
-        checkCommand("Р", "[Р]");
-        checkCommand(";", "[][]");
-        checkCommand("a;", "[a][]");
-        checkCommand(";a", "[][a]");
-        checkCommand("\"\"", "[]");
-        checkCommand("a\"b;c", "ERROR_QUOTE_IN_PLAIN_FIELD");
-        checkCommand("\"a\"b;c", "ERROR_TEXT_AFTER_QUOTE");
-        checkCommand("\"\"\"\"", "[\"]");
-        checkCommand("\"a\";", "[a][]");
-        checkCommand("a;\"\";b", "[a][][b]");
-        checkCommand(";\"a;b\"", "[][a;b]");
+        checkCommand("a;b;c", "[a][b][c]");                 // три звичайні поля
+        checkCommand("a;;c", "[a][][c]");                   // порожнє поле посередині
+        checkCommand("\"a;b\";c", "[a;b][c]");              // ';' всередині лапок не розділяє
+        checkCommand("\"a\"\"b\";c", "[a\"b][c]");          // подвоєна лапка -> одна літеральна
+        checkCommand("\"abc;d", "ERROR_UNCLOSED_QUOTE");    // лапки не закрито
+        checkCommand("", "[]");                             // порожній рядок = одне порожнє поле
+        checkCommand("Р", "[Р]");                           // один символ
+        checkCommand(";", "[][]");                          // два порожні поля
+        checkCommand("a;", "[a][]");                        // порожнє поле в кінці
+        checkCommand(";a", "[][a]");                        // порожнє поле на початку
+        checkCommand("\"\"", "[]");                         // порожнє поле в лапках
+        checkCommand("a\"b;c", "ERROR_QUOTE_IN_PLAIN_FIELD"); // лапка в звичайному полі
+        checkCommand("\"a\"b;c", "ERROR_TEXT_AFTER_QUOTE");  // текст після закривної лапки
+        checkCommand("\"\"\"\"", "[\"]");                    // чотири лапки = одна літеральна лапка
+        checkCommand("\"a\";", "[a][]");                     // лапки + порожнє поле після ';'
+        checkCommand("a;\"\";b", "[a][][b]");                // порожнє поле в лапках посередині
+        checkCommand(";\"a;b\"", "[][a;b]");                 // порожнє поле + поле з ';' у лапках
         checkCommand(null, "");
 
         System.out.println();
