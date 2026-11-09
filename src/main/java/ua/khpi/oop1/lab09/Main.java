@@ -1,7 +1,7 @@
 package ua.khpi.oop1.lab09;
 
 /**
- * Лабораторна робота № 9. Варіант 1 (обов'язковий рівень).
+ * Лабораторна робота № 9. Варіант 1 (обов'язковий рівень) і завдання A (поглиблений рівень).
  * Регулярні вирази не використовуються.
  */
 public class Main {
@@ -13,28 +13,34 @@ public class Main {
     static final int STATE_AFTER_QUOTE = 3;  // після закривної лапки (очікуємо ';' або кінець)
 
     // Коди помилок, які повертає parseCommand
-    static final int ERROR_UNCLOSED_QUOTE = -1;      // лапки відкриті, але не закриті до кінця рядка
+    static final int ERROR_UNCLOSED_QUOTE = -1;       // лапки відкриті, але не закриті до кінця рядка
     static final int ERROR_QUOTE_IN_PLAIN_FIELD = -2; // лапка всередині звичайного поля
     static final int ERROR_TEXT_AFTER_QUOTE = -3;     // текст після закривної лапки до ';'
+    static final int ERROR_NULL_INPUT = -4;           // вхідний рядок або масив відсутній (null)
 
     // Лічильники для протоколу тестів
     static int total = 0;
     static int passed = 0;
 
-    // Обчислення
+    // ===== Обчислення =====
 
     /**
-     * Замінює кожну послідовність пробільних символів одним пробілом і прибирає пробіли по краях.
-     * Вхід не може бути null.
+     * Замінює кожну послідовність пробільних символів одним пробілом
+     * і прибирає пробіли по краях.
+     * Якщо source == null, повертає порожній рядок.
      */
     static String normalize(String source) {
+        if (source == null) {
+            return "";
+        }
+
         StringBuilder result = new StringBuilder(source.length());
         boolean separatorPending = false;
 
         for (int index = 0; index < source.length(); index++) {
             char symbol = source.charAt(index);
             if (Character.isWhitespace(symbol)) {
-                // пробіл додаємо лише тоді коли вже є текст
+                // пробіл додаємо лише тоді, коли вже є текст
                 separatorPending = result.length() > 0;
             } else {
                 if (separatorPending) {
@@ -48,24 +54,34 @@ public class Main {
     }
 
     /**
-     * Кількість вилучених одиниць UTF-16: різниця довжин початкового і нормалізованого рядків
+     * Кількість вилучених одиниць UTF-16: різниця довжин початкового
+     * і нормалізованого рядків.
+     * Якщо source == null або normalized == null, повертає 0.
      */
     static int removedUnits(String source, String normalized) {
+        if (source == null || normalized == null) {
+            return 0;
+        }
         return source.length() - normalized.length();
     }
 
     /**
      * Завдання A: розбір командного рядка на поля.
      *   - поля розділяються символом ';';
-     *   - порожні поля дозволені , "a;;c" -> три поля: "a", "", "c");
+     *   - порожні поля дозволені ("a;;c" -> три поля: "a", "", "c");
      *   - поле може бути взяте в подвійні лапки: "a;b";c -> поля "a;b" і "c";
      *   - всередині лапок подвоєна лапка "" означає одну лапку: "a""b" -> a"b;
      *   - лапка всередині звичайного поля - помилка ERROR_QUOTE_IN_PLAIN_FIELD;
      *   - будь-який текст після закривної лапки до ';' - помилка ERROR_TEXT_AFTER_QUOTE;
-     *   - якщо лапки не закрито до кінця рядка - помилка ERROR_UNCLOSED_QUOTE.
-
+     *   - якщо лапки не закрито до кінця рядка - помилка ERROR_UNCLOSED_QUOTE;
+     *   - якщо line == null або fields == null - помилка ERROR_NULL_INPUT.
+     * Повертає кількість полів або від'ємний код помилки.
      */
     static int parseCommand(String line, String[] fields) {
+        if (line == null || fields == null) {
+            return ERROR_NULL_INPUT;
+        }
+
         StringBuilder field = new StringBuilder(); // накопичувач поточного поля
         int count = 0;                             // скільки полів уже збережено
         int state = STATE_START;                   // поточний стан автомата
@@ -91,7 +107,7 @@ public class Main {
                 if (symbol == ';') {
                     fields[count] = field.toString();
                     count++;
-                    field.setLength(0);           // очищаємо накопичувач для наступного поля
+                    field.setLength(0);            // очищаємо накопичувач для наступного поля
                     state = STATE_START;
                 } else if (symbol == '"') {
                     return ERROR_QUOTE_IN_PLAIN_FIELD;
@@ -131,7 +147,7 @@ public class Main {
             return ERROR_UNCLOSED_QUOTE;
         }
 
-        // Зберігаємо останнє поле
+        // Зберігаємо останнє поле.
         // Це коректно і для STATE_START (порожнє поле), і для STATE_PLAIN, і для STATE_AFTER_QUOTE
         fields[count] = field.toString();
         count++;
@@ -140,9 +156,14 @@ public class Main {
 
     /**
      * Допоміжний метод для тестів: перетворює рядок у текстове подання полів
-     * виду "[][]..." або повертає назву помилки
+     * виду "[a][b]..." або повертає назву помилки.
+     * Якщо line == null, повертає "ERROR_NULL_INPUT".
      */
     static String parseToText(String line) {
+        if (line == null) {
+            return "ERROR_NULL_INPUT";
+        }
+
         String[] fields = new String[line.length() + 1]; // максимум полів = довжина + 1
         int count = parseCommand(line, fields);
 
@@ -156,6 +177,9 @@ public class Main {
         if (count == ERROR_TEXT_AFTER_QUOTE) {
             return "ERROR_TEXT_AFTER_QUOTE";
         }
+        if (count == ERROR_NULL_INPUT) {
+            return "ERROR_NULL_INPUT";
+        }
 
         // Формуємо результат у вигляді [a][b][c]
         StringBuilder text = new StringBuilder();
@@ -165,7 +189,7 @@ public class Main {
         return text.toString();
     }
 
-    //Консольне подання
+    // ===== Консольне подання =====
 
     static void check(String input, String expected, String actual) {
         total++;
@@ -173,15 +197,12 @@ public class Main {
         if (ok) {
             passed++;
         }
-        System.out.println((ok ? "ОК       " : "ПОМИЛКА  ") + "вхід=" + input + " очікувано=" + expected + " фактично=" + actual);
+        System.out.println((ok ? "ОК       " : "ПОМИЛКА  ")
+                + "вхід=" + input + " очікувано=" + expected + " фактично=" + actual);
     }
 
     /** Перевірка: очікуваний текст і кількість вилучених одиниць */
     static void checkNormalize(String source, String expected, int expectedRemoved) {
-        if (source == null) {            // відсутній вхід обробляється явно
-            System.out.println("Немає входу: null не допускається");
-            return;
-        }
         String normalized = normalize(source);
         int removed = removedUnits(source, normalized);
         check("\"" + source + "\"",
@@ -190,10 +211,6 @@ public class Main {
     }
 
     static void checkCommand(String line, String expected) {
-        if (line == null) {
-            System.out.println("Немає входу: null не допускається");
-            return;
-        }
         check(line, expected, parseToText(line));
     }
 
@@ -210,28 +227,33 @@ public class Main {
         checkNormalize("Y   N", "Y N", 2);
         // символ поза базовою площиною (сурогатна пара) не розривається
         checkNormalize(" H\uD83D\uDE0E    I ", "H\uD83D\uDE0E I", 5);
-        checkNormalize(null, "", 0);
+        checkNormalize(null, "", 0);                          // відсутній вхід
 
         System.out.println();
         System.out.println("Завдання A: parseCommand");
-        checkCommand("a;b;c", "[a][b][c]");                 // три звичайні поля
-        checkCommand("a;;c", "[a][][c]");                   // порожнє поле посередині
-        checkCommand("\"a;b\";c", "[a;b][c]");              // ';' всередині лапок не розділяє
-        checkCommand("\"a\"\"b\";c", "[a\"b][c]");          // подвоєна лапка -> одна літеральна
-        checkCommand("\"abc;d", "ERROR_UNCLOSED_QUOTE");    // лапки не закрито
-        checkCommand("", "[]");                             // порожній рядок = одне порожнє поле
-        checkCommand("Р", "[Р]");                           // один символ
-        checkCommand(";", "[][]");                          // два порожні поля
-        checkCommand("a;", "[a][]");                        // порожнє поле в кінці
-        checkCommand(";a", "[][a]");                        // порожнє поле на початку
-        checkCommand("\"\"", "[]");                         // порожнє поле в лапках
+        checkCommand("a;b;c", "[a][b][c]");                   // три звичайні поля
+        checkCommand("a;;c", "[a][][c]");                     // порожнє поле посередині
+        checkCommand("\"a;b\";c", "[a;b][c]");                // ';' всередині лапок не розділяє
+        checkCommand("\"a\"\"b\";c", "[a\"b][c]");            // подвоєна лапка -> одна літеральна
+        checkCommand("\"abc;d", "ERROR_UNCLOSED_QUOTE");      // лапки не закрито
+        checkCommand("", "[]");                               // порожній рядок = одне порожнє поле
+        checkCommand("Р", "[Р]");                             // один символ
+        checkCommand(";", "[][]");                            // два порожні поля
+        checkCommand("a;", "[a][]");                          // порожнє поле в кінці
+        checkCommand(";a", "[][a]");                          // порожнє поле на початку
+        checkCommand("\"\"", "[]");                           // порожнє поле в лапках
         checkCommand("a\"b;c", "ERROR_QUOTE_IN_PLAIN_FIELD"); // лапка в звичайному полі
-        checkCommand("\"a\"b;c", "ERROR_TEXT_AFTER_QUOTE");  // текст після закривної лапки
-        checkCommand("\"\"\"\"", "[\"]");                    // чотири лапки = одна літеральна лапка
-        checkCommand("\"a\";", "[a][]");                     // лапки + порожнє поле після ';'
-        checkCommand("a;\"\";b", "[a][][b]");                // порожнє поле в лапках посередині
-        checkCommand(";\"a;b\"", "[][a;b]");                 // порожнє поле + поле з ';' у лапках
-        checkCommand(null, "");
+        checkCommand("\"a\"b;c", "ERROR_TEXT_AFTER_QUOTE");   // текст після закривної лапки
+        checkCommand("\"\"\"\"", "[\"]");                     // чотири лапки = одна літеральна лапка
+        checkCommand("\"a\";", "[a][]");                      // лапки + порожнє поле після ';'
+        checkCommand("a;\"\";b", "[a][][b]");                 // порожнє поле в лапках посередині
+        checkCommand(";\"a;b\"", "[][a;b]");                  // порожнє поле + поле з ';' у лапках
+        checkCommand(null, "ERROR_NULL_INPUT");               // відсутній вхід
+
+        // null замість масиву полів
+        check("parseCommand(\"a\", null)",
+                String.valueOf(ERROR_NULL_INPUT),
+                String.valueOf(parseCommand("a", null)));
 
         System.out.println();
         System.out.println("Пройдено " + passed + " з " + total);
