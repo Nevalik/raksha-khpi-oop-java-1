@@ -1,8 +1,7 @@
 out/
-*.class
+target/
 .idea/
 *.iml
-.vscode/
-.settings/
-.classpath
-.project
+*.class
+*.log
+docs/api/
