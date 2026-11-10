@@ -145,6 +145,9 @@ flowchart TD
 
 Програма запускається командою `java -cp target/classes ua.khpi.oop1.lab10.app.Main` (після `mvn clean package`) або, без Maven, `java -cp out ua.khpi.oop1.lab10.app.Main`. Усі 26 перевірок, які виконує `Main` (рядки 1-16 і 24-33 протоколів, крім перевірок помилок), показали `OK`.
 
+
+![mvn clean package та запуск Main](assets/build_run.png)
+
 ### Протокол перевірки: варіант 1
 
 | № | Тип | Вхід | Очікувано | Фактично | Статус |
@@ -213,6 +216,7 @@ flowchart TD
 | Javadoc | відкрити сторінку `MeasurementMath` у `docs/api` |Видно описи параметрів, результат і виняток IllegalArgumentException для clamp, scale, normalize | видно параметри, результат і виняток |
 | Після повернення файла | `javac` усього дерева і запуск `Main` | Компіляція успішна, 26 перевірок `OK` | Файл повернуто до коректного стану |
 
+
 ### Складання та документація
 
 ```bash
@@ -221,12 +225,17 @@ mvn clean package
 
 Результат: [INFO] BUILD SUCCESS
 
-
 ```bash
 javadoc -d docs/api src/main/java/ua/khpi/oop1/lab10/measurement/MeasurementMath.java src/main/java/ua/khpi/oop1/lab10/checksum/Fletcher16.java src/main/java/ua/khpi/oop1/lab10/app/Main.java
 ```
 
 Javadoc згенеровано без попереджень; сторінки класів містять опис параметрів, результату та `@throws`. Каталог `docs/api` не додається до Git.
+
+
+![Javadoc-сторінка MeasurementMath](assets/javadoc.png)
+
+![Javadoc: деталі методів clamp і scale (Parameters, Returns, Throws)](assets/javadoc_details.png)
+
 
 ## Висновки
 
