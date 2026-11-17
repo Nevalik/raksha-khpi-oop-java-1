@@ -39,7 +39,7 @@ public final class Intervals {
     public static int intersectionMinutes(int start1, int end1, int start2, int end2) {
         if (!isValidMinute(start1) || !isValidMinute(end1)
                 || !isValidMinute(start2) || !isValidMinute(end2)) {
-            throw new IllegalArgumentException("хвилини повинні бути в інтервалі 0..1439");
+            throw new IllegalArgumentException("хвилини мають бути в інтервалі 0...1439");
         }
 
         int first1End = firstPartEnd(start1, end1);

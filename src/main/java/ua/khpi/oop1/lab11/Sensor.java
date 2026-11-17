@@ -91,7 +91,7 @@ public final class Sensor {
      */
     public void update(double newValue) {
         if (!isValidValue(newValue)) {
-            throw new IllegalArgumentException("value must be finite");
+            throw new IllegalArgumentException("value має бути скінченним");
         }
         value = newValue;
     }
