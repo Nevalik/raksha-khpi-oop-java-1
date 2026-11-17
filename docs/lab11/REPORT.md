@@ -219,7 +219,6 @@ java -cp target/classes ua.khpi.oop1.lab11.Main interval-error
 
 ![errors.png](assets/errors.png)
 
-Фактичний вивід: `IllegalArgumentException: value має бути скінченним` для `update(NaN)` і `IllegalArgumentException: хвилини мають бути в інтервалі 0...1439` для `intersectionMinutes(-1, 10, 0, 10)`
 
 ## Висновки
 
