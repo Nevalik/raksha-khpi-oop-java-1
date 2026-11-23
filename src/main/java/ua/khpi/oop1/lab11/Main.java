@@ -4,6 +4,8 @@ package ua.khpi.oop1.lab11;
  * Демонстрація і перевірки для Sensor та Intervals.
  * Без аргументів запускає всі перевірки; з аргументом sensor-error
  * або interval-error показує виняток.
+ * Код завершення: 0 - усе гаразд, 1 - є невдалі перевірки
+ * (або необроблений виняток у режимі показу), 2 - невідомий аргумент.
  */
 public class Main {
     /** Кількість успішних перевірок. */
@@ -16,15 +18,27 @@ public class Main {
     }
 
     /**
-     * Точка входу.
+     * Точка входу. Єдине місце, де викликається System.exit.
      *
      * @param args без аргументів: усі перевірки; sensor-error або interval-error:
      *             показ винятку
      */
     public static void main(String[] args) {
+        int code = run(args);
+        if (code != 0) {
+            System.exit(code);
+        }
+    }
+
+    /**
+     * Виконує програму і повертає код завершення.
+     *
+     * @param args аргументи командного рядка
+     * @return 0 - успіх, 1 - є невдалі перевірки, 2 - невідомий аргумент
+     */
+    private static int run(String[] args) {
         if (args.length > 0) {
-            demonstrateError(args[0]);
-            return;
+            return demonstrateError(args[0]);
         }
 
         System.out.println("Обов'язковий рівень: Sensor ");
@@ -34,15 +48,18 @@ public class Main {
         testIntervals();
         System.out.println();
         System.out.println("Passed: " + passed + ", failed: " + failed);
+
+        return failed > 0 ? 1 : 0;
     }
 
     /**
      * Виконує недопустимий виклик. Виняток не перехоплюється,
-     * тому програма завершується з IllegalArgumentException.
+     * тому програма завершується з IllegalArgumentException (код 1).
      *
      * @param mode sensor-error або interval-error
+     * @return 2, якщо аргумент невідомий
      */
-    private static void demonstrateError(String mode) {
+    private static int demonstrateError(String mode) {
         if (mode.equals("sensor-error")) {
             Sensor sensor = new Sensor("S-1", "°C", 1.0);
             System.out.println(sensor);
@@ -53,7 +70,9 @@ public class Main {
             Intervals.intersectionMinutes(-1, 10, 0, 10);
         } else {
             System.out.println("Невідомий аргумент. Допустимо: sensor-error, interval-error");
+            return 2;
         }
+        return 0;
     }
 
     /** Перевірки обов'язкового рівня (Sensor). */
@@ -77,15 +96,18 @@ public class Main {
         checkRejectedUpdate("6 tryUpdate(+Infinity)", sensor, Double.POSITIVE_INFINITY);
         checkRejectedUpdate("7 tryUpdate(-Infinity)", sensor, Double.NEGATIVE_INFINITY);
 
-        // умови, за якими конструктор кидає IllegalArgumentException
-        check("8 id = null недопустимий", "false", String.valueOf(Sensor.isValidText(null)));
-        check("9 id з пробілів недопустимий", "false", String.valueOf(Sensor.isValidText("  ")));
-        check("10 unit = null недопустимий", "false", String.valueOf(Sensor.isValidText(null)));
-        check("11 unit порожній недопустимий", "false", String.valueOf(Sensor.isValidText("")));
-        check("12 value = NaN недопустиме", "false",
-                String.valueOf(Sensor.isValidValue(Double.NaN)));
-        check("13 value = Infinity недопустиме", "false",
-                String.valueOf(Sensor.isValidValue(Double.POSITIVE_INFINITY)));
+        // update() з недопустимим значенням кидає виняток і не змінює стан
+        checkThrows("7б update(NaN) кидає виняток", () -> sensor.update(Double.NaN));
+        check("7в стан після винятку збережено", "0.0", String.valueOf(sensor.getValue()));
+
+        // конструктор кидає IllegalArgumentException
+        checkThrows("8 id = null кидає виняток", () -> new Sensor(null, "°C", 1.0));
+        checkThrows("9 id з пробілів кидає виняток", () -> new Sensor("  ", "°C", 1.0));
+        checkThrows("10 unit = null кидає виняток", () -> new Sensor("S-1", null, 1.0));
+        checkThrows("11 unit порожній кидає виняток", () -> new Sensor("S-1", "", 1.0));
+        checkThrows("12 value = NaN кидає виняток", () -> new Sensor("S-1", "°C", Double.NaN));
+        checkThrows("13 value = Infinity кидає виняток",
+                () -> new Sensor("S-1", "°C", Double.POSITIVE_INFINITY));
 
         // два незалежні об'єкти та псевдонім
         Sensor a = new Sensor("A", "V", 1.0);
@@ -129,10 +151,14 @@ public class Main {
                 String.valueOf(Intervals.intersectionMinutes(1439, 1439, 0, 1439)));
 
         // межі поза 0..1439: метод кидає IllegalArgumentException
-        check("A12 start1 = -1 недопустима", "false", String.valueOf(Intervals.isValidMinute(-1)));
-        check("A13 end1 = 1440 недопустима", "false", String.valueOf(Intervals.isValidMinute(1440)));
-        check("A14 start2 = 1440 недопустима", "false", String.valueOf(Intervals.isValidMinute(1440)));
-        check("A15 end2 = -5 недопустима", "false", String.valueOf(Intervals.isValidMinute(-5)));
+        checkThrows("A12 start1 = -1 кидає виняток",
+                () -> Intervals.intersectionMinutes(-1, 10, 0, 10));
+        checkThrows("A13 end1 = 1440 кидає виняток",
+                () -> Intervals.intersectionMinutes(0, 1440, 0, 10));
+        checkThrows("A14 start2 = 1440 кидає виняток",
+                () -> Intervals.intersectionMinutes(0, 10, 1440, 10));
+        checkThrows("A15 end2 = -5 кидає виняток",
+                () -> Intervals.intersectionMinutes(0, 10, 0, -5));
 
         System.out.println();
         System.out.println("Проміжні кроки для 22:00-02:00 з 01:00-03:00:");
@@ -193,6 +219,22 @@ public class Main {
         boolean accepted = sensor.tryUpdate(value);
         check(name + ": відхилено, стан збережено", "true",
                 String.valueOf(!accepted && before.equals(sensor.toString())));
+    }
+
+    /**
+     * Перевіряє, що дія кидає IllegalArgumentException.
+     *
+     * @param name   назва перевірки
+     * @param action дія, яка має кинути виняток
+     */
+    private static void checkThrows(String name, Runnable action) {
+        boolean thrown = false;
+        try {
+            action.run();
+        } catch (IllegalArgumentException e) {
+            thrown = true;
+        }
+        check(name, "true", String.valueOf(thrown));
     }
 
     /**
