@@ -4,11 +4,16 @@
 
 ```bash
 mvn compile
-java -cp target/classes ua.khpi.oop1.lab11.Main
+java -cp target/classes ua.khpi.oop1.lab12.Main
 ```
 
-додати аргумент `sensor-error` або `interval-error` для окремих тестів
-Код завершення: `0` — успіх, `1` — є `[FAIL]` або виняток, `2` — невідомий аргумент.
+## Генерація Javadoc
+
+```bash
+javadoc -encoding UTF-8 -package -sourcepath src/main/java -d docs/api ua.khpi.oop1.lab12
+```
+
+Результат з'являється в `docs/api/`; відкрийте `docs/api/index.html` у браузері. Усі класи пакета передаються разом: інакше `javadoc` не знайде залежних класів (помилка `cannot find symbol` для `Device`). Каталог `docs/api/` згенерований, його додано до `.gitignore` і до Git не потрапляє.
 
 ## Звіти з лабораторних робіт
 
@@ -23,3 +28,4 @@ java -cp target/classes ua.khpi.oop1.lab11.Main
 9. [Звіт лабораторної роботи №9](docs/lab09/REPORT.md)
 10. [Звіт лабораторної роботи №10](docs/lab10/REPORT.md)
 11. [Звіт лабораторної роботи №11](docs/lab11/REPORT.md)
+12. [Звіт лабораторної роботи №12](docs/lab12/REPORT.md)
