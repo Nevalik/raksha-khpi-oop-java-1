@@ -4,11 +4,9 @@
 
 ```bash
 mvn compile
-java -cp target/classes ua.khpi.oop1.lab11.Main
+java -cp target/classes ua.khpi.oop1.lab12.Main
 ```
 
-додати аргумент `sensor-error` або `interval-error` для окремих тестів
-Код завершення: `0` — успіх, `1` — є `[FAIL]` або виняток, `2` — невідомий аргумент.
 
 ## Звіти з лабораторних робіт
 

@@ -1,16 +1,17 @@
 package ua.khpi.oop1.lab12;
 
 /**
- *  варіант 1:реєстр пристроїв із пошуком за ідентифікатором і сумою потужностей
+ *  варіант 1: реєстр пристроїв із пошуком за ідентифікатором і сумою потужностей
  *  поглиблений рівень A (стабільне вилучення дублікатів).
  */
 public class Main {
     /**
-     * Створює реєстр місткістю 6, повністю заповнений пристроями
-     * Потужність кожного пристрою дорівнює {@code id * 10} Вт
+     * Створює реєстр місткістю 6, повністю заповнений пристроями.
+     * Потужність кожного пристрою дорівнює {@code id * 10} Вт.
+     *
      * @return масив із шести пристроїв
      */
-    static Device[] fiveDevices() {
+    static Device[] sixDevices() {
         Device[] data = new Device[6];
         for (int index = 0; index < data.length; index++) {
             data[index] = new Device(index + 1, (index + 1) * 10.0);
@@ -19,8 +20,8 @@ public class Main {
     }
 
     /**
-     * Формує текстове подання ідентифікаторів усього масиву
-     * Переглядається весь масив тому вільнікомірки позначаються словом {@code null} Приклад результату:
+     * Формує текстове подання ідентифікаторів усього масиву.
+     * Переглядається весь масив, тому вільні комірки позначаються словом {@code null} Приклад результату:
      * {@code [1, 2, 3, null, null]}.
      * @param data масив пристроїв
      * @return рядок вигляду {@code [id, id, null, ...]}
@@ -41,7 +42,7 @@ public class Main {
     }
 
     /**
-     * Виводить результат однієї перевірки й оновлює лічильники
+     * Виводить результат однієї перевірки й оновлює лічильники.
      * @param name      назва перевірки
      * @param condition {@code true}, якщо перевірка пройдена
      * @param result    лічильники: {@code result[0]} - пройдені,
@@ -58,7 +59,7 @@ public class Main {
     }
 
     /**
-     * Запускає всі перевірки
+     * Запускає всі перевірки.
      * Наприкінці виводить кількість пройдених і не пройдених перевірок.
      * @param args аргументи командного рядка не використовуються
      */
@@ -110,46 +111,46 @@ public class Main {
         check("add при місткості 0", ObjectArrayService.add(noCapacity, 0, new Device(1, 1.0)) == 0, result);
 
         // Видалення зі зсувом
-        Device[] five = fiveDevices();
-        int fiveSize = 5;
-        fiveSize = ObjectArrayService.removeAt(five, fiveSize, 3);
-        System.out.println("Після видалення id=3: " + ids(five) + " size=" + fiveSize);
-        check("remove середнього: size=4", fiveSize == 4, result);
-        check("remove середнього: хвіст зсунуто", five[0].id() == 1 && five[1].id() == 2
-                && five[2].id() == 4 && five[3].id() == 5, result);
-        check("remove середнього: остання комірка null", five[4] == null, result);
-        check("після remove id=3 не знайдено", ObjectArrayService.find(five, fiveSize, 3) == null, result);
-        check("після remove сума = 120.0", ObjectArrayService.totalPower(five, fiveSize) == 120.0, result);
+        Device[] six = sixDevices();
+        int sixSize = 6;
+        System.out.println("До видалення id=3: " + ids(six) + " size=" + sixSize);
+        sixSize = ObjectArrayService.removeId(six, sixSize, 3);
+        System.out.println("Після видалення id=3: " + ids(six) + " size=" + sixSize);
+        check("remove середнього: size=5", sixSize == 5, result);
+        check("remove середнього: хвіст зсунуто", six[0].id() == 1 && six[1].id() == 2
+                && six[2].id() == 4 && six[3].id() == 5 && six[4].id() == 6, result);
+        check("remove середнього: остання комірка null", six[5] == null, result);
+        check("після remove id=3 не знайдено", ObjectArrayService.find(six, sixSize, 3) == null, result);
+        check("після remove сума = 180.0", ObjectArrayService.totalPower(six, sixSize) == 180.0, result);
 
-        five = fiveDevices();
-        fiveSize = ObjectArrayService.removeAt(five, 5, 1);
-        check("remove першого: size=4", fiveSize == 4, result);
-        check("remove першого: усі зсунуто", five[0].id() == 2 && five[1].id() == 3
-                && five[2].id() == 4 && five[3].id() == 5, result);
-        check("remove першого: остання комірка null", five[4] == null, result);
+        six = sixDevices();
+        sixSize = ObjectArrayService.removeId(six, 6, 1);
+        check("remove першого: size=5", sixSize == 5, result);
+        check("remove першого: усі зсунуто", six[0].id() == 2 && six[1].id() == 3
+                && six[2].id() == 4 && six[3].id() == 5 && six[4].id() == 6, result);
+        check("remove першого: остання комірка null", six[5] == null, result);
 
-        five = fiveDevices();
-        fiveSize = ObjectArrayService.removeAt(five, 5, 5);
-        check("remove останнього: size=4", fiveSize == 4, result);
-        check("remove останнього: початок без змін", five[0].id() == 1 && five[1].id() == 2
-                && five[2].id() == 3 && five[3].id() == 4, result);
-        check("remove останнього: комірка null", five[4] == null, result);
+        six = sixDevices();
+        sixSize = ObjectArrayService.removeId(six, 6, 6);
+        check("remove останнього: size=5", sixSize == 5, result);
+        check("remove останнього: початок без змін", six[0].id() == 1 && six[1].id() == 2
+                && six[2].id() == 3 && six[3].id() == 4 && six[4].id() == 5, result);
+        check("remove останнього: комірка null", six[5] == null, result);
 
         Device[] single = { new Device(1, 1.0), null, null };
-        int singleSize = ObjectArrayService.removeAt(single, 1, 1);
+        int singleSize = ObjectArrayService.removeId(single, 1, 1);
         check("remove єдиного: size=0, комірка null", singleSize == 0 && single[0] == null, result);
 
-        check("remove при size=0", ObjectArrayService.removeAt(five, 0, 1) == 0, result);
+        check("remove при size=0", ObjectArrayService.removeId(six, 0, 1) == 0, result);
 
-        five = fiveDevices();
-        fiveSize = ObjectArrayService.removeAt(five, 5, 99);
-        check("remove відсутнього: size=5, масив без змін", fiveSize == 5 && five[0].id() == 1
-                && five[2].id() == 3 && five[4].id() == 5, result);
+        six = sixDevices();
+        sixSize = ObjectArrayService.removeId(six, 6, 99);
+        check("remove відсутнього: size=6, масив без змін", sixSize == 6 && six[0].id() == 1
+                && six[2].id() == 3 && six[5].id() == 6, result);
 
-        five = fiveDevices();
-        five[4] = null;
+        six = sixDevices();
         check("remove: елемент поза size не зачіпається",
-                ObjectArrayService.removeAt(five, 4, 5) == 4 && five[4] == null, result);
+                ObjectArrayService.removeId(six, 5, 6) == 5 && six[5] != null && six[5].id() == 6, result);
 
         // Поглиблений рівень A: стабільне вилучення дублікатів
         System.out.println();
@@ -206,6 +207,78 @@ public class Main {
         int beyondSize = ObjectArrayService.removeDuplicates(beyond, 2);
         check("A: елементи поза size не зачіпаються", beyondSize == 1 && beyond[1] == null
                 && beyond[2] != null && beyond[3] != null, result);
+
+        // Недопустимі дані та недопустимий стан
+        System.out.println();
+        System.out.println("Помилки");
+
+        boolean thrown;
+
+        thrown = false;
+        try {
+            new Device(0, 1.0);
+        } catch (IllegalArgumentException e) {
+            thrown = true;
+        }
+        check("Device: id <= 0 відхилено", thrown, result);
+
+        thrown = false;
+        try {
+            new Device(1, -5.0);
+        } catch (IllegalArgumentException e) {
+            thrown = true;
+        }
+        check("Device: від'ємна потужність відхилена", thrown, result);
+
+        thrown = false;
+        try {
+            new Device(1, Double.NaN);
+        } catch (IllegalArgumentException e) {
+            thrown = true;
+        }
+        check("Device: NaN відхилено", thrown, result);
+
+        thrown = false;
+        try {
+            ObjectArrayService.find(data, -1, 1);
+        } catch (IllegalArgumentException e) {
+            thrown = true;
+        }
+        check("find: size < 0", thrown, result);
+
+        thrown = false;
+        try {
+            ObjectArrayService.find(data, data.length + 1, 1);
+        } catch (IllegalArgumentException e) {
+            thrown = true;
+        }
+        check("find: size > length", thrown, result);
+
+        thrown = false;
+        try {
+            ObjectArrayService.find(null, 0, 1);
+        } catch (IllegalArgumentException e) {
+            thrown = true;
+        }
+        check("find: масив null", thrown, result);
+
+        thrown = false;
+        try {
+            Device[] hole = { new Device(1, 1.0), null, new Device(2, 2.0) };
+            ObjectArrayService.totalPower(hole, 3);
+        } catch (IllegalArgumentException e) {
+            thrown = true;
+        }
+        check("totalPower: null у логічній частині", thrown, result);
+
+        thrown = false;
+        try {
+            ObjectArrayService.removeDuplicates(data, data.length + 1);
+        } catch (IllegalArgumentException e) {
+            thrown = true;
+        }
+        check("A: removeDuplicates, size > length", thrown, result);
+
 
         System.out.println();
         System.out.println("Пройдено: " + result[0] + ", помилок: " + result[1]);

@@ -10,7 +10,7 @@ final class Device {
      * Створює пристрій із перевіркою вхідних даних
      *
      * @param id    додатний ідентифікатор пристрою
-     * @param power потужність у ватах, скінченна й додатня
+     * @param power потужність у ватах, скінченна й невід'ємна
      * @throws IllegalArgumentException якщо {@code id <= 0}, потужність від'ємна, {@code NaN} або нескінченна
      */
     Device(int id, double power) {

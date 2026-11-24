@@ -11,7 +11,7 @@ final class ObjectArrayService {
     }
 
     /**
-     * Перевіряє, що масив існує, а логічний розмір лежить у межах
+     * Перевіряє, що масив існує, а логічний розмір лежить у межах.
      * {@code 0 <= size <= data.length}.
      * @param data масив пристроїв
      * @param size логічний розмір
@@ -21,15 +21,20 @@ final class ObjectArrayService {
         if (data == null || size < 0 || size > data.length) {
             throw new IllegalArgumentException("нелогічний розмір");
         }
+        for (int index = 0; index < size; index++) {
+            if (data[index] == null) {
+                throw new IllegalArgumentException("null у логічній частині");
+            }
+        }
     }
 
     /**
-     * Шукає перший пристрій із заданим ідентифікатором у логічній частині масиву
+     * Шукає перший пристрій із заданим ідентифікатором у логічній частині масиву.
      * @param data масив пристроїв
      * @param size логічний розмір
      * @param id   шуканий ідентифікатор
      * @return індекс знайденого пристрою або {@code -1}, якщо його немає
-     * @throws IllegalArgumentException якщо {@code data} дорівнює {@code null} або {@code size} недопустимий
+     * @throws IllegalArgumentException якщо {@code data} дорівнює {@code null} або {@code size} недопустимий, або якщо в логічній частині є null
      */
     static int indexOf(Device[] data, int size, int id) {
         checkRange(data, size);
@@ -42,12 +47,12 @@ final class ObjectArrayService {
     }
 
     /**
-     * Знаходить пристрій за ідентифікатором
+     * Знаходить пристрій за ідентифікатором.
      * @param data масив пристроїв
      * @param size логічний розмір
      * @param id   шуканий ідентифікатор
      * @return знайдений пристрій або {@code null}, якщо його немає
-     * @throws IllegalArgumentException якщо {@code data} дорівнює {@code null}або {@code size} недопустимий
+     * @throws IllegalArgumentException якщо {@code data} дорівнює {@code null} або {@code size} недопустимий, або якщо в логічній частині є null
      */
     static Device find(Device[] data, int size, int id) {
         int index = indexOf(data, size, id);
@@ -55,11 +60,11 @@ final class ObjectArrayService {
     }
 
     /**
-     * Обчислює суму потужностей усіх пристроїв логічної частини
+     * Обчислює суму потужностей усіх пристроїв логічної частини.
      * @param data масив пристроїв
      * @param size логічний розмір
      * @return сума потужностей у ватах; для {@code size = 0} дорівнює {@code 0.0}
-     * @throws IllegalArgumentException якщо {@code data} дорівнює {@code null}або {@code size} недопустимий
+     * @throws IllegalArgumentException якщо {@code data} дорівнює {@code null}або {@code size} недопустимий, або якщо в логічній частині є null
      */
     static double totalPower(Device[] data, int size) {
         checkRange(data, size);
@@ -71,13 +76,13 @@ final class ObjectArrayService {
     }
 
     /**
-     * Додає пристрій у кінець логічної частини
-     * Пристрій не додається, якщо він дорівнює {@code null}, реєстр заповненийабо пристрій із таким самим ідентифікатором уже є. У цих випадках розмір не змінюється
+     * Додає пристрій у кінець логічної частини.
+     * Пристрій не додається, якщо він дорівнює {@code null}, реєстр заповнений або пристрій із таким самим ідентифікатором уже є. У цих випадках розмір не змінюється.
      * @param data   масив пристроїв
      * @param size   поточний логічний розмір
      * @param device пристрій, який потрібно додати
      * @return новий логічний розмір: {@code size + 1} після додаванняабо попередній {@code size}, якщо додавання відхилено
-     * @throws IllegalArgumentException якщо {@code data} дорівнює {@code null} або {@code size} недопустимий
+     * @throws IllegalArgumentException якщо {@code data} дорівнює {@code null} або {@code size} недопустимий, або якщо в логічній частині є null
      */
     static int add(Device[] data, int size, Device device) {
         checkRange(data, size);
@@ -92,14 +97,14 @@ final class ObjectArrayService {
     }
 
     /**
-     * Видаляє пристрій за ідентифікатором зі зсувом хвоста ліворуч
+     * Видаляє пристрій за ідентифікатором зі зсувом хвоста ліворуч.
      * @param data масив пристроїв
      * @param size поточний логічний розмір
      * @param id   ідентифікатор пристрою, який потрібно видалити
-     * @return новий логічний розмір: {@code size - 1} після видаленняабо попередній {@code size}, якщо пристрою немає
-     * @throws IllegalArgumentException якщо {@code data} дорівнює {@code null} або {@code size} недопустимий
+     * @return новий логічний розмір: {@code size - 1} після видалення або попередній {@code size}, якщо пристрою немає
+     * @throws IllegalArgumentException якщо {@code data} дорівнює {@code null} або {@code size} недопустимий, або якщо в логічній частині є null
      */
-    static int removeAt(Device[] data, int size, int id) {
+    static int removeId(Device[] data, int size, int id) {
         checkRange(data, size);
         int index = indexOf(data, size, id);
         if (index < 0) {
@@ -113,7 +118,7 @@ final class ObjectArrayService {
     }
 
     /**
-     * Поглиблений рівень A: стабільне вилучення дублікатів за ідентифікатором
+     * Поглиблений рівень A: стабільне вилучення дублікатів за ідентифікатором.
      * Операція виконується в тому самому масиві. Залишається перший об'єкт із кожним ідентифікатором, порядок решти елементів зберігається.
      * @param data масив пристроїв
      * @param size логічний розмір до вилучення
@@ -126,7 +131,7 @@ final class ObjectArrayService {
     }
 
     /**
-     * Вилучає дублікати так само, як {@link #removeDuplicates(Device[], int)},і за потреби записує проміжні кроки
+     * Вилучає дублікати так само, як {@link #removeDuplicates(Device[], int)},і за потреби записує проміжні кроки.
      * @param data  масив пристроїв
      * @param size  логічний розмір до вилучення
      * @param trace буфер для тексту проміжних кроків або {@code null},якщо трасування не потрібне; текст лише дописується, виводити його має викликач
@@ -138,21 +143,21 @@ final class ObjectArrayService {
         int unique = 0;
         for (int read = 0; read < size; read++) {
             Device candidate = data[read];
-            boolean is_unique = true;
+            boolean duplicate = false;
             for (int index = 0; index < unique; index++) {
                 if (data[index].id() == candidate.id()) {
-                    is_unique = false;
+                    duplicate = true;
                     break;
                 }
             }
-            if (is_unique) {
+            if (!duplicate) {
                 data[unique] = candidate;
                 unique++;
             }
             if (trace != null) {
                 trace.append("read=").append(read)
                         .append(" id=").append(candidate.id())
-                        .append(!is_unique ? " дублікат, пропуск" : " унікальний, запис")
+                        .append(duplicate ? " дублікат, пропуск" : " унікальний, запис")
                         .append(" | unique=").append(unique).append('\n');
             }
         }
