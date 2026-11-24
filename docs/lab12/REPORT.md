@@ -52,11 +52,11 @@ removeDuplicates(data, size):
     unique = 0                              // data[0..unique) — унікальна частина
     для read від 0 до size - 1:
         candidate = data[read]
-        isUnique = true
+        duplicate = false
         для index від 0 до unique - 1:
             якщо data[index].id == candidate.id:
-                isUnique = false; перервати
-        якщо isUnique:
+                duplicate = true; перервати
+        якщо не duplicate:
             data[unique] = candidate
             unique = unique + 1
     для index від unique до size - 1:
